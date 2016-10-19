@@ -7,6 +7,8 @@
 # Facultad de Ciencias, UNAM                              #
 ###########################################################
 
+#Hola a todos
+
 
 from datetime import datetime
 from functools import reduce
@@ -54,7 +56,6 @@ class Persona(object):
 class Agenda(object):
     """Clase que se encarga de modelar una agenda. Esta clase tiene
     definidas las siguientes funciones:
-
     * agrega(persona)
     * busca(nombre_o_telefono)
     * elimina(nombre_o_telefono)
@@ -155,9 +156,9 @@ class Menu(object):
     def menu(self):
         """Muestra el menú con las operaciones que están permitidas
         dentro de la agenda."""
+        print("Bienvenido\n") #Opcional, para que solo aparezca una sola vez
         while True:
-            print("Bienvenido\n")
-            print("Por favor selecciona una opción")
+            print("\nPor favor selecciona una opción")
             print("1) Agregar una persona")
             print("2) Borrar una persona")
             print("3) Actualizar una persona")
@@ -192,21 +193,37 @@ class Menu(object):
     def __agregar(self):
         print("\n==================================\n")
         nombre = input("Dame el nombre: ")
-        telefono = input("Dame el telefono: ")
-        fecha_nac = input("Dame la fecha de nacimiento (dd/mm/YYYY): ")
-        correo = input("Dame el correo: ")
-        persona = Persona(nombre, fecha_nac, correo, telefono)
-        self.agenda.agrega(persona)
-        print("\n==================================\n")
+        if self.agenda.busca(nombre) is not None:
+            print ("Ese contacto ya tiene un telefono/nombre en uso ")
+        else:
+            try : # Inicia bloque try para cualquier error que pueda ocurrir con ,la fecha
+                telefono = input("Dame el telefono: ")
+                fecha_nac = input("Dame la fecha de nacimiento (dd/mm/YYYY): ")
+                correo = input("Dame el correo: ")
+                persona = Persona(nombre, fecha_nac, correo, telefono)
+                self.agenda.agrega(persona)
+                print("\n==================================\n")
+                print ("La operación se realizó con éxito")
+            except:
+                print ('La fecha que ingresaste no es válida')
+                
 
     def __borrar(self):
+        if self.agenda.lista == []: #Revisa que la agenda sea vacía
+            print ("\n////Tu agenda está vacía/////\n")
+            return
         print("\n==================================\n")
         nom_or_tel = input("Dame el nombre o número de teléfono: ")
+        p = self.agenda.busca(nom_or_tel) #Se busca para imprimir el nombre después.
+        nombre = p.nombre
         self.agenda.elimina(nom_or_tel)
-        print("Eliminado")
+        print("El contacto con nombre " + nombre +" fue eliminado")
         print("\n==================================\n")
 
     def __actualiza(self):
+        if self.agenda.lista == []: #Revisa que la agenda sea vacía
+            print ("////Tu agenda está vacía/////  ")
+            return
         print("\n==================================\n")
         nom_or_tel = input(
             "Dame el nombre o número de teléfono del contacto a actualizar: ")
@@ -219,6 +236,9 @@ class Menu(object):
         print("\n==================================\n")
 
     def __busca(self):
+        if self.agenda.lista == []: #Revisa que la agenda sea vacía
+            print ("////Tu agenda está vacía/////  ")
+            return
         print("\n==================================\n")
         nom_or_tel = input(
             "Dame el nombre o número de teléfono del contacto a buscar: ")
@@ -228,23 +248,35 @@ class Menu(object):
         print("\n==================================\n")
 
     def __contacto_mayor(self):
+        if self.agenda.lista == []: #Revisa que la agenda sea vacía
+            print ("////Tu agenda está vacía/////  ")
+            return
         print("\n==================================\n")
         p = self.agenda.contacto_mayor()
         p.imprime_persona()
         print("\n==================================\n")
 
     def __contacto_menor(self):
+        if self.agenda.lista == []: #Revisa que la agenda sea vacía
+            print ("////Tu agenda está vacía/////  ")
+            return
         print("\n==================================\n")
         p = self.agenda.contacto_menor()
         p.imprime_persona()
         print("\n==================================\n")
 
     def __promedio(self):
+        if self.agenda.lista == []: #Revisa que la agenda sea vacía
+            print ("////Tu agenda está vacía/////  ")
+            return
         print("\n==================================\n")
         self.agenda.promedio()
         print("\n==================================\n")
 
     def __imprime(self):
+        if self.agenda.lista == []: #Revisa que la agenda sea vacía
+            print ("////Tu agenda está vacía/////  ")
+            return
         print("\n==================================\n")
         self.agenda.imprime_agenda()
         print("\n==================================\n")
@@ -252,3 +284,7 @@ class Menu(object):
 if __name__ == '__main__':
     menu = Menu()
     menu.menu()
+
+# Permitir varios nombres de personas iguales
+# Manejar excepción en fecha
+# Revisar que la agenda no es vacía
